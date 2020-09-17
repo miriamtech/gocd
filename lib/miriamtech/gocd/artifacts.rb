@@ -2,7 +2,7 @@ module MiriamTech
   module GoCD
     module DSL
       def with_artifacts_volume(prefix = project_name, &block)
-        artifacts_volume = "#{prefix}#{build_tag}".gsub('[/:]', '_')
+        artifacts_volume = sanitized_volume_name("#{prefix}#{build_tag}")
         docker "volume create #{artifacts_volume}"
         yield artifacts_volume
       ensure
@@ -19,6 +19,12 @@ module MiriamTech
         ensure
           docker "rm -v #{container_id}"
         end
+      end
+
+      private
+
+      def sanitized_volume_name(name)
+        name.gsub(/[^-_\.A-Za-z0-9]/, '_')
       end
     end
   end
