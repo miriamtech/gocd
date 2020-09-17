@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module MiriamTech
   module GoCD
     module DSL
