@@ -19,4 +19,25 @@ class MiriamTech::GoCD::ArtifactsTest < Minitest::Test
       assert_equal 'hello_world_123', volume_name
     end
   end
+
+  def test_capture_artifacts
+    expect(self).to receive('docker').with('volume create foo')
+    expect(self).to receive('copy_artifacts_from_volume')
+    capture_artifacts('foo', workdir: '/path/to/app', path: 'test_results') do |volume_arg|
+      expect(self).to receive('docker').with('volume rm foo')
+      assert_equal '-v foo:/path/to/app/test_results', volume_arg
+    end
+  end
+
+  def test_capture_artifacts_after_exception_raised
+    expect(self).to receive('docker').with('volume create foo')
+    expect(self).to receive('copy_artifacts_from_volume')
+    assert_raises StandardError do
+      capture_artifacts('foo', workdir: '/path/to/app', path: 'test_results') do |volume_arg|
+        expect(self).to receive('docker').with('volume rm foo')
+        raise "Something went wrong"
+      end
+    end
+  end
+
 end

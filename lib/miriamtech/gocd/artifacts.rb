@@ -1,6 +1,16 @@
 module MiriamTech
   module GoCD
     module DSL
+      def capture_artifacts(prefix = project_name, workdir:, path:, &block)
+        with_artifacts_volume(prefix) do |volume_name|
+          begin
+            yield "-v #{volume_name}:#{workdir}/#{path}"
+          ensure
+            copy_artifacts_from_volume(volume_name, local_path: path)
+          end
+        end
+      end
+
       def with_artifacts_volume(prefix = project_name, &block)
         artifacts_volume = sanitized_volume_name("#{prefix}#{build_tag}")
         docker "volume create #{artifacts_volume}"
