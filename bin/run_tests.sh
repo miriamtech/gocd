@@ -20,6 +20,8 @@ if [ ! -z "${TEST_NAME}" ]; then
   fi
   echo "Running: ${METHOD_NAME}"
   ${COMMAND} ${FILENAME} --name "${METHOD_NAME}"
-else
+elif [ ! -z "${FILENAME}" ]; then
   ${COMMAND} ${FILENAME}
+else
+  rake
 fi
