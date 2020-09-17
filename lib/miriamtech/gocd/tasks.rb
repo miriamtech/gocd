@@ -1,4 +1,5 @@
 require 'pathname'
+require 'rake/clean'
 
 module MiriamTech
   module GoCD
