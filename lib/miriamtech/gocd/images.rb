@@ -1,20 +1,18 @@
 module MiriamTech
   module GoCD
     module DSL
-      def build_tag
-        @build_tag || generate_build_tag
-      end
+      WORKER_IMAGE = 'debian:buster'
 
       def pull(image_name)
-        sh "docker pull #{image_name}#{build_tag}"
+        docker "pull #{image_name}#{build_tag}"
       end
 
       def push(image_name, tag = nil)
         if tag
-          sh "docker tag #{image_name}#{build_tag} #{image_name}:#{tag}"
-          sh "docker push #{image_name}:#{tag}"
+          docker "tag #{image_name}#{build_tag} #{image_name}:#{tag}"
+          docker "push #{image_name}:#{tag}"
         else
-          sh "docker push #{image_name}#{build_tag}"
+          docker "push #{image_name}#{build_tag}"
         end
       end
 
@@ -25,20 +23,9 @@ module MiriamTech
         images.each do |image|
           next unless image.match(/:(\d+)\z/)
           if $1.to_i < revision_number - number_to_keep
-            sh "docker image rm #{image}"
+            docker "image rm #{image}"
           end
         end
-      end
-
-      private
-
-      def generate_build_tag
-        if revision = ENV['GO_PIPELINE_COUNTER']
-          @build_tag =":#{revision}"
-        else
-          @build_tag = ""
-        end
-        ENV['BUILD_TAG'] = @build_tag
       end
     end
   end
