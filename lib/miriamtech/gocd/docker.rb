@@ -2,7 +2,7 @@ module MiriamTech
   module GoCD
     module DSL
       def project_name(env = ENV)
-        (env['GO_PIPELINE_NAME'] || File.basename(File.expand_path('.'))).downcase
+        (env['GO_PIPELINE_NAME'] || root_path.basename.to_s).downcase
       end
 
       def build_tag(env = ENV)
