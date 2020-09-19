@@ -11,7 +11,7 @@ module MiriamTech
         task :default => [:test]
         task :full => [:clobber, :build]
 
-        CLEAN.add(root_path + '/test/reports')
+        CLEAN.add(root_path + 'test/reports')
         task :clean do
           docker_compose "stop"
         end
