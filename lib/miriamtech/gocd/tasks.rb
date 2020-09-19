@@ -11,12 +11,16 @@ module MiriamTech
         task :default => [:test]
         task :full => [:clobber, :build]
 
+        task :environment do
+          ENV['BUILD_TAG'] = build_tag
+        end
+
         CLEAN.add(root_path + 'test/reports')
-        task :clean do
+        task :clean => :environment do
           docker_compose "stop"
         end
 
-        task :clobber => :cleanup_old_images do
+        task :clobber => [:environment, :cleanup_old_images] do
           docker_compose "rm -fv"
         end
 
@@ -24,11 +28,11 @@ module MiriamTech
           cleanup_old_images(image_name, revisions_to_keep)
         end
 
-        task :build do
+        task :build => :environment do
           docker "build --force-rm -t #{image_name}#{build_tag} #{root_path}"
         end
 
-        task :test
+        task :test => :environment
 
         task :push do
           push(image_name)

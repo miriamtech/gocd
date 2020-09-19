@@ -14,7 +14,6 @@ module MiriamTech
       end
 
       def docker_compose(string)
-        # PIPELINE_NAME = (ENV['GO_PIPELINE_NAME'] || 'ilien').downcase
         cd root_path do
           sh "docker-compose -p #{project_name} -f docker-compose.yml #{string}"
         end
@@ -28,7 +27,6 @@ module MiriamTech
         else
           @build_tag = ""
         end
-        env['BUILD_TAG'] = @build_tag
       end
     end
   end
