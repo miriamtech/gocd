@@ -30,6 +30,8 @@ class MiriamTech::GoCD::PathsTest < Minitest::Test
   end
 
   def test_root_path_without_dockerfile_assumed_to_be_cwd
+    cwd = Pathname.new(File.expand_path('.'))
+    assert_equal cwd, root_path
     cd @dir do
       assert_equal @dir, root_path
     end
