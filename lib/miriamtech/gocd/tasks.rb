@@ -43,6 +43,10 @@ module MiriamTech
           pull(image_name)
           push(image_name, 'deployed')
         end
+
+        task :bash do
+          docker("run -it --rm #{image_name} bash")
+        end
       end
     end
   end
