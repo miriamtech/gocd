@@ -36,4 +36,12 @@ class MiriamTech::GoCD::PathsTest < Minitest::Test
       assert_equal @dir, root_path
     end
   end
+
+  def test_compose_file
+    cd @dir do
+      refute compose_file.exist?
+      File.open('docker-compose.yml', 'w') { |f| f.puts 'version: "3.8"' }
+      assert compose_file.exist?
+    end
+  end
 end

@@ -16,12 +16,17 @@ module MiriamTech
         end
 
         CLEAN.add(root_path + 'test/reports')
-        task :clean => :environment do
-          docker_compose "stop"
-        end
+        task :clean => [:environment]
+        task :clobber => [:environment, :cleanup_old_images]
 
-        task :clobber => [:environment, :cleanup_old_images] do
-          docker_compose "rm -fv"
+        if compose_file.exist?
+          task :clean do
+            docker_compose "stop"
+          end
+
+          task :clobber do
+            docker_compose "rm -fv"
+          end
         end
 
         task :cleanup_old_images do

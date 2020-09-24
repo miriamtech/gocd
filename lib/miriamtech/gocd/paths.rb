@@ -12,6 +12,10 @@ module MiriamTech
         end until path.root?
         cwd
       end
+
+      def compose_file
+        root_path / 'docker-compose.yml'
+      end
     end
   end
 end
