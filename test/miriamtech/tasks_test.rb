@@ -44,7 +44,7 @@ module MiriamTech
       def test_environment_exports_build_tag
         define_gocd_tasks('miriamtech/something')
         @build_tag = ':11235'
-        assert_empty ENV['BUILD_TAG']
+        assert_empty(ENV['BUILD_TAG'] || '')
         begin
           Rake::Task[:environment].invoke
           assert_equal ':11235', ENV['BUILD_TAG']
