@@ -37,7 +37,7 @@ module MiriamTech
         end
 
         task :build => :environment do
-          docker "build --force-rm -t #{image_name}#{build_tag} #{root_path}"
+          docker "build #{docker_build_arguments.join(' ')} -t #{image_name}#{build_tag} #{root_path}"
         end
 
         task :test => :environment

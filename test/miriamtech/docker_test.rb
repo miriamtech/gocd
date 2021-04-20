@@ -17,6 +17,28 @@ module MiriamTech
         assert_equal 'my-project', project_name('GO_PIPELINE_NAME' => 'my-project')
         assert_equal 'myproject', project_name('GO_PIPELINE_NAME' => 'MyProject')
       end
+
+      def test_docker_build_arguments
+        assert_includes docker_build_arguments, '--force-rm'
+      end
+
+      def test_docker_build_no_cache
+        refute_includes docker_build_arguments, '--no-cache'
+        (%w[0 f false n no] + ['']).each do |falsy|
+          refute_includes(
+            docker_build_arguments({ 'DOCKER_BUILD_NO_CACHE' => falsy }),
+            '--no-cache',
+            "DOCKER_BUILD_NO_CACHE=#{falsy.inspect} should not add '--no-cache' arg",
+          )
+        end
+        %w[1 t true y yes definitely].each do |truthy|
+          assert_includes(
+            docker_build_arguments({ 'DOCKER_BUILD_NO_CACHE' => truthy }),
+            '--no-cache',
+            "DOCKER_BUILD_NO_CACHE=#{truthy.inspect} should add '--no-cache' arg",
+          )
+        end
+      end
     end
   end
 end

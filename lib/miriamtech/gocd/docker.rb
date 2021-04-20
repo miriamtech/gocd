@@ -1,5 +1,6 @@
 module MiriamTech
   module GoCD
+    FALSY_ENV_VALUES = (%w[0 f false n no] + ['']).freeze
     module DSL
       def project_name(env = ENV)
         (env['GO_PIPELINE_NAME'] || root_path.basename.to_s).downcase
@@ -11,6 +12,13 @@ module MiriamTech
 
       def docker(string)
         sh "docker #{string}"
+      end
+
+      def docker_build_arguments(env = ENV)
+        args = ['--force-rm']
+        no_cache_arg = env['DOCKER_BUILD_NO_CACHE']
+        args << '--no-cache' if no_cache_arg && !FALSY_ENV_VALUES.include?(no_cache_arg)
+        args
       end
 
       def docker_compose(string)
