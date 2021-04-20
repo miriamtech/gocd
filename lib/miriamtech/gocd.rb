@@ -1,2 +1,2 @@
-require "miriamtech/gocd/version"
-require "miriamtech/gocd/dsl"
+require 'miriamtech/gocd/version'
+require 'miriamtech/gocd/dsl'

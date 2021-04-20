@@ -22,10 +22,12 @@ module MiriamTech
       private
 
       def generate_build_tag(env)
-        if revision = env['GO_PIPELINE_COUNTER']
-          @build_tag =":#{revision}"
+        revision = env['GO_PIPELINE_COUNTER']
+        if revision
+          @build_tag = revision ? ":#{revision}" : ''
         else
-          @build_tag = ""
+          @build_tag = ''
+          ''
         end
       end
     end

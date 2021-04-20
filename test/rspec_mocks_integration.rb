@@ -20,4 +20,4 @@ module RSpecMocksIntegration
     ::RSpec::Mocks.teardown
   end
 end
-Minitest::Test.send(:include, RSpecMocksIntegration)
+Minitest::Test.include RSpecMocksIntegration

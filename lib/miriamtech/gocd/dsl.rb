@@ -5,4 +5,4 @@ require_relative 'lambda'
 require_relative 'paths'
 require_relative 'tasks'
 
-self.extend MiriamTech::GoCD::DSL
+Object.extend MiriamTech::GoCD::DSL

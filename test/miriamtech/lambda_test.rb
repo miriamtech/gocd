@@ -1,13 +1,17 @@
-require "test_helper"
+require 'test_helper'
 
-class MiriamTech::GoCD::LambdaTest < Minitest::Test
-  include MiriamTech::GoCD::DSL
+module MiriamTech
+  module GoCD
+    class LambdaTest < Minitest::Test
+      include DSL
 
-  def test_invoke_lambda
-    expect(self).to receive('sh') do |arg|
-      assert_match 'aws lambda invoke --function-name foo', arg
+      def test_invoke_lambda
+        expect(self).to receive('sh') do |arg|
+          assert_match 'aws lambda invoke --function-name foo', arg
+        end
+        allow(self).to receive('puts') # Cheesy workaround for cheesy feedback mechanism
+        invoke_lambda('foo')
+      end
     end
-    allow(self).to receive('puts') # Cheesy workaround for cheesy feedback mechanism
-    invoke_lambda('foo')
   end
 end

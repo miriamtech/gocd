@@ -6,10 +6,11 @@ module MiriamTech
       def root_path
         cwd = Pathname.new(File.expand_path('.'))
         path = Pathname.new(cwd)
-        begin
+        loop do
+          break if path.root?
           return path if path.join('Dockerfile').exist?
           path = path.parent
-        end until path.root?
+        end
         cwd
       end
 
