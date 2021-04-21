@@ -1,5 +1,5 @@
 module MiriamTech
   module GoCD
-    VERSION = '0.2.7'.freeze
+    VERSION = '0.2.8'.freeze
   end
 end

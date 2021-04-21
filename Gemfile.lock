@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    miriamtech-gocd (0.2.7)
+    miriamtech-gocd (0.2.8)
       rake (>= 10.0)
 
 GEM
