@@ -10,6 +10,10 @@ module MiriamTech
         @build_tag ||= generate_build_tag(env)
       end
 
+      def build_counter(env = ENV)
+        @build_counter ||= generate_build_counter(env)
+      end
+
       def docker(string)
         sh "docker #{string}"
       end
@@ -30,13 +34,13 @@ module MiriamTech
       private
 
       def generate_build_tag(env)
-        revision = env['GO_PIPELINE_COUNTER']
-        if revision
-          @build_tag = revision ? ":#{revision}" : ''
-        else
-          @build_tag = ''
-          ''
-        end
+        revision = env['GO_REVISION_SOURCE']
+        revision ? ":#{revision}" : ''
+      end
+
+      def generate_build_counter(env)
+        counter = env['GO_PIPELINE_COUNTER']
+        counter ? ":#{counter}" : ''
       end
     end
   end

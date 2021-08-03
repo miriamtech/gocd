@@ -14,7 +14,7 @@ module MiriamTech
 
       def test_define_gocd_tasks
         define_gocd_tasks('miriamtech/something')
-        %i[clean clobber build test push deploy].each do |task_name|
+        %i[clean clobber build test push deploy save load].each do |task_name|
           assert rake_task(task_name), "Expected task :#{task_name} to be defined"
         end
       end
@@ -28,17 +28,11 @@ module MiriamTech
 
       def test_docker_compose_tasks_require_environment
         define_gocd_tasks('miriamtech/something')
-        %i[clean clobber build test].each do |task_name|
+        %i[clean clobber build test save].each do |task_name|
           assert_includes rake_task(task_name).prerequisites,
                           'environment',
                           "Task :#{task_name} needs :environment prereq"
         end
-      end
-
-      def test_test_requires_environment
-        define_gocd_tasks('miriamtech/something')
-        task = rake_task(:test)
-        assert_includes task.prerequisites, 'environment'
       end
 
       def test_environment_exports_build_tag
@@ -48,6 +42,25 @@ module MiriamTech
         begin
           Rake::Task[:environment].invoke
           assert_equal ':11235', ENV['BUILD_TAG']
+        ensure
+          ENV.delete('BUILD_TAG')
+        end
+      end
+
+      def test_build_task_tags_with_tag_and_counter
+        RSpec::Matchers.define :tag_matcher do
+          match do |actual|
+            actual.include?('-t miriamtech/something:123') && actual.include?('-t miriamtech/something:abcd1234')
+          end
+        end
+
+        allow(self).to receive(:build_tag).and_return(':abcd1234')
+        allow(self).to receive(:build_counter).and_return(':123')
+        expect(self).to receive(:docker).with(tag_matcher)
+
+        define_gocd_tasks('miriamtech/something')
+        begin
+          Rake::Task[:build].invoke
         ensure
           ENV.delete('BUILD_TAG')
         end

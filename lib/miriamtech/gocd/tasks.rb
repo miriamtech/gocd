@@ -37,10 +37,21 @@ module MiriamTech
         end
 
         task :build => :environment do
-          docker "build #{docker_build_arguments.join(' ')} -t #{image_name}#{build_tag} #{root_path}"
+          docker "build #{docker_build_arguments.join(' ')} -t #{image_name}#{build_tag} -t #{image_name}#{build_counter} #{root_path}"
         end
 
         task :test => :environment
+
+        task :save, [:path] => :environment do | t, args |
+          args.with_defaults(path: File.join(root_path, '.docker', 'image.tar'))
+          FileUtils.mkdir_p File.dirname(args[:path])
+          docker "save #{image_name}#{build_tag} -o #{args[:path]}"
+        end
+
+        task :load, :path do | t, args |
+          args.with_defaults(path: File.join(root_path, '.docker', 'image.tar'))
+          docker "load -i #{args[:path]}"
+        end
 
         task :push do
           push(image_name)
