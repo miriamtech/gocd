@@ -22,6 +22,10 @@ module MiriamTech
         assert_includes docker_build_arguments, '--force-rm'
       end
 
+      def test_docker_build_arguments_dict
+        assert_includes docker_build_arguments(build_args: { foo: 'bar' }), '--build-arg foo=bar'
+      end
+
       def test_docker_build_no_cache
         refute_includes docker_build_arguments, '--no-cache'
         (%w[0 f false n no] + ['']).each do |falsy|

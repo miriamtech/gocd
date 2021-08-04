@@ -8,7 +8,8 @@ module MiriamTech
 
       def define_gocd_tasks(
         image_name,
-        revisions_to_keep: 10
+        revisions_to_keep: 10,
+        build_args: {}
       )
 
         task :default => [:test]
@@ -37,7 +38,7 @@ module MiriamTech
         end
 
         task :build => :environment do
-          docker "build #{docker_build_arguments.join(' ')} -t #{image_name}#{build_tag} -t #{image_name}#{build_counter} #{root_path}"
+          docker "build #{docker_build_arguments(build_args: build_args).join(' ')} -t #{image_name}#{build_tag} -t #{image_name}#{build_counter} #{root_path}"
         end
 
         task :test => :environment

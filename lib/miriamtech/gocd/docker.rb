@@ -18,10 +18,13 @@ module MiriamTech
         sh "docker #{string}"
       end
 
-      def docker_build_arguments(env = ENV)
+      def docker_build_arguments(env = ENV, build_args: {})
         args = ['--force-rm']
         no_cache_arg = env['DOCKER_BUILD_NO_CACHE']
         args << '--no-cache' if no_cache_arg && !FALSY_ENV_VALUES.include?(no_cache_arg)
+        build_args.each do |key, value|
+          args << "--build-arg #{key}=#{value}"
+        end
         args
       end
 
