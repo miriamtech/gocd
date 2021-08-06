@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module MiriamTech
   module GoCD
     module DSL
@@ -10,7 +12,7 @@ module MiriamTech
       end
 
       def with_artifacts_volume(prefix = project_name)
-        artifacts_volume = sanitized_volume_name("#{prefix}#{build_tag}")
+        artifacts_volume = sanitized_volume_name("#{prefix}_#{random_hex}")
         docker "volume create #{artifacts_volume}"
         yield artifacts_volume
       ensure
@@ -33,6 +35,10 @@ module MiriamTech
 
       def sanitized_volume_name(name)
         name.gsub(/[^-_.A-Za-z0-9]/, '_')
+      end
+
+      def random_hex
+        SecureRandom.hex
       end
     end
   end
