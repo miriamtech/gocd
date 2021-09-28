@@ -21,7 +21,7 @@ module MiriamTech
 
         CLEAN.add("#{root_path}/test/reports")
         task :clean => [:environment]
-        task :destroy_containers => [:environment, :cleanup_old_images]
+        task :destroy_containers => [:environment, :clean, :cleanup_old_images]
 
         # This is here for compatibility
         task :clobber => :destroy_containers
