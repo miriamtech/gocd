@@ -14,7 +14,7 @@ module MiriamTech
 
       def test_define_gocd_tasks
         define_gocd_tasks('miriamtech/something')
-        %i[clean clobber build test push deploy save load].each do |task_name|
+        %i[clean destroy_containers build test push deploy save load].each do |task_name|
           assert rake_task(task_name), "Expected task :#{task_name} to be defined"
         end
       end
@@ -28,7 +28,7 @@ module MiriamTech
 
       def test_docker_compose_tasks_require_environment
         define_gocd_tasks('miriamtech/something')
-        %i[clean clobber build test save].each do |task_name|
+        %i[clean destroy_containers build test save].each do |task_name|
           assert_includes rake_task(task_name).prerequisites,
                           'environment',
                           "Task :#{task_name} needs :environment prereq"

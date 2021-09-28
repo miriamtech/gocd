@@ -13,7 +13,7 @@ module MiriamTech
       )
 
         task :default => [:test]
-        task :full => [:clobber, :build]
+        task :full => [:destroy_containers, :build]
 
         task :environment do
           ENV['BUILD_TAG'] = build_tag
@@ -21,14 +21,17 @@ module MiriamTech
 
         CLEAN.add("#{root_path}/test/reports")
         task :clean => [:environment]
-        task :clobber => [:environment, :cleanup_old_images]
+        task :destroy_containers => [:environment, :cleanup_old_images]
+
+        # This is here for compatibility
+        task :clobber => :destroy_containers
 
         if compose_file.exist?
           task :clean do
             docker_compose 'stop'
           end
 
-          task :clobber do
+          task :destroy_containers do
             docker_compose 'rm -fv'
           end
         end
@@ -41,7 +44,9 @@ module MiriamTech
           docker "build #{docker_build_arguments(build_args: build_args).join(' ')} -t #{image_name}#{build_tag} -t #{image_name}#{build_counter} #{root_path}"
         end
 
-        task :test => :environment
+        task :test => [:environment, :destroy_containers] do
+          at_exit { Rake::Task[:destroy_containers].execute }
+        end
 
         task :save, [:path] => :environment do | t, args |
           args.with_defaults(path: File.join(root_path, '.docker', 'image.tar'))
