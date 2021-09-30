@@ -17,13 +17,12 @@ module MiriamTech
       end
 
       def cleanup_old_images(image_name, number_to_keep)
-        revision_number = ENV['GO_PIPELINE_COUNTER'].to_i
-        return unless revision_number > number_to_keep
-        images = `docker images --format "{{.Repository}}:{{.Tag}}" #{image_name}`.split(/\s+/)
-        images.each do |image|
-          next unless image.match(/:(\d+)\z/)
-          next unless Regexp.last_match(1).to_i < revision_number - number_to_keep
-          docker "image rm #{image}"
+        images = `docker images --format '"{{.CreatedAt}}" id:{{.ID}}' #{image_name} | sort`.split("\n")
+        images.each_with_index do |image, index|
+          break if index >= number_to_keep
+          match = image.match(/id:(.*)\z/)
+          next unless match
+          docker "image rm --force #{match[1]}"
         end
       end
     end
