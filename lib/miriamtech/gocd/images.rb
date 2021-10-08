@@ -18,11 +18,9 @@ module MiriamTech
 
       def cleanup_old_images(image_name, number_to_keep)
         images = `docker images --format '"{{.CreatedAt}}" id:{{.ID}}' #{image_name} | sort -r`.split("\n")
-        images.each_with_index do |image, index|
+        images.collect { |each| each.split(':').last }.uniq.each_with_index do |image, index|
           next if index <= number_to_keep
-          match = image.match(/id:(.*)\z/)
-          next unless match
-          docker "image rm --force #{match[1]}"
+          puts "docker image rm --force #{image}"
         end
       end
     end
