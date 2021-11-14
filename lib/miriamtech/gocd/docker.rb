@@ -3,7 +3,18 @@ module MiriamTech
     FALSY_ENV_VALUES = (%w[0 f false n no] + ['']).freeze
     module DSL
       def project_name(env = ENV)
-        (env['GO_PIPELINE_NAME'] || root_path.basename.to_s).downcase
+        pipeline_name = env['GO_PIPELINE_NAME']
+        stage_name = env['GO_STAGE_NAME']
+        job_name = env['GO_JOB_NAME']
+        name = root_path.basename.to_s
+
+        if pipeline_name
+          name = pipeline_name
+          name += "-#{stage_name}" if stage_name
+          name += "-#{job_name}" if job_name
+        end
+
+        name.downcase
       end
 
       def build_tag(env = ENV)

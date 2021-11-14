@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    miriamtech-gocd (0.2.8)
+    miriamtech-gocd (0.3.1)
       rake (>= 10.0)
 
 GEM
@@ -14,7 +14,7 @@ GEM
     parser (3.0.1.0)
       ast (~> 2.4.1)
     rainbow (3.0.0)
-    rake (13.0.3)
+    rake (13.0.6)
     regexp_parser (2.1.1)
     rexml (3.2.5)
     rspec-expectations (3.9.2)
@@ -53,4 +53,4 @@ DEPENDENCIES
   rubocop-minitest
 
 BUNDLED WITH
-   2.0.2
+   2.2.31

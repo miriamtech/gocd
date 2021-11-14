@@ -18,6 +18,31 @@ module MiriamTech
         assert_equal 'myproject', project_name('GO_PIPELINE_NAME' => 'MyProject')
       end
 
+      def test_project_name_from_pipeline_and_stage
+        env = {
+          'GO_PIPELINE_NAME' => 'my-project',
+          'GO_STAGE_NAME' => 'my-stage',
+        }
+        assert_equal 'my-project-my-stage', project_name(env)
+      end
+
+      def test_project_name_from_pipeline_and_stage
+        env = {
+          'GO_PIPELINE_NAME' => 'my-project',
+          'GO_JOB_NAME' => 'my-job',
+        }
+        assert_equal 'my-project-my-job', project_name(env)
+      end
+
+      def test_project_name_from_pipeline_stage_and_job
+        env = {
+          'GO_PIPELINE_NAME' => 'my-project',
+          'GO_STAGE_NAME' => 'my-stage',
+          'GO_JOB_NAME' => 'my-job',
+        }
+        assert_equal 'my-project-my-stage-my-job', project_name(env)
+      end
+
       def test_docker_build_arguments
         assert_includes docker_build_arguments, '--force-rm'
       end
