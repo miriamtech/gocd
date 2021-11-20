@@ -20,7 +20,7 @@ module MiriamTech
         images = `docker images --format '"{{.CreatedAt}}" id:{{.ID}}' #{image_name} | sort -r`.split("\n")
         images.collect { |each| each.split(':').last }.uniq.each_with_index do |image, index|
           next if index <= number_to_keep
-          puts "docker image rm --force #{image}"
+          docker "image rm --force #{image}"
         end
       end
     end
