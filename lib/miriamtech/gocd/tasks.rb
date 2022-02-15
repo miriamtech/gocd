@@ -20,18 +20,19 @@ module MiriamTech
         end
 
         CLEAN.add("#{root_path}/test/reports")
-        task :clean => [:environment]
+        task :stop_containers => [:environment]
         task :destroy_containers => [:environment, :clean, :cleanup_old_images]
 
-        # This is here for compatibility
+        # These are here for compatibility
+        task :clean => :stop_containers
         task :clobber => :destroy_containers
 
         if compose_file.exist?
-          task :clean do
+          task :stop_containers => [:environment] do
             docker_compose 'stop'
           end
 
-          task :destroy_containers do
+          task :destroy_containers => [:stop_containers] do
             docker_compose 'rm -fv'
           end
         end
